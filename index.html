@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="#" type="image/x-icon">
+        <link rel="stylesheet" href="css/index.css">
+        <title>Recetas Sin Gluten</title>
+    </head>
+
+    <body>
+        <header>
+            <div>
+                <img src="" alt="">
+            </div>
+            <nav>
+                <a href="#">Desayuno</a>
+                <a href="#">Segundo desayuno</a>
+                <a href="#">Desayuno de Media Mañana</a>
+                <a href="#">Almuerzo</a>
+                <a href="#">Merienda</a>
+                <a href="#">Cena</a>
+            </nav>
+        </header>
+
+        <main>
+            <h2>Titu tipo</h2>
+            <div class="listado-recetas">
+                <?php
+                    while($receta = mysqli_fetch_assoc($lista_recetas)){ ?>
+                        <section class="pelicula">
+                            <p><?php echo $receta['nombre']; ?></p>
+                            <p class="precio"><?php echo $receta['descripcion']; ?></p>
+                            <button class="verMas">Ver más</button>
+                        </section>
+                  <?php }
+                ?>
+            </div>
+        </main>
+        
+        <script src="js/recetas.js"></script>
+    </body>
+</html>

@@ -9,26 +9,52 @@ class Validator{
         return $saneados;
     }
 
-    public static function validarDirector($data){
+// VALIDAR RECETA
+    public static function validarReceta($data){
         $errors = [];
 
         //validar nombre
         if(!isset($data['nombre']) || empty(trim($data['nombre']))){
             $errors['nombre'] = "El nombre es necesario";
-        }elseif(strlen($data['nombre']) < 2 || strlen($data['nombre']) > 15){
-            $errors['nombre'] = "El nombre debe tener entre 2 y 15 caracteres";
+        }elseif(strlen($data['nombre']) < 2 || strlen($data['nombre']) > 50){
+            $errors['nombre'] = "El nombre debe tener entre 2 y 50 caracteres";
         }
 
-        //validar apellido
-        if(!isset($data['apellido']) || empty(trim($data['apellido']))){
-            $errors['apellido'] = "El apellido es necesario";
-        }elseif(strlen($data['apellido']) < 2 || strlen($data['apellido']) > 30){
-            $errors['apellido'] = "El apellido debe tener entre 2 y 30 caracteres";
+        //validar descripción
+        if(!isset($data['descripcion']) || empty(trim($data['descripcion']))){
+            $errors['descripcion'] = "La descripción es necesaria";
+        }elseif(strlen($data['descripcion']) < 2 || strlen($data['descripcion']) > 1000){
+            $errors['descripcion'] = "La descripción debe tener entre 2 y 1000 caracteres";
         }
 
-        //validar biografia
-        if(isset($data['biografia']) && strlen($data['biografia']) > 200){
-            $errors['biografia'] = "La biografia es demasiado extensa";
+        //validar comensales
+        if(isset($data['comensales']) && strlen($data['comensales']) > 20){
+            $errors['comensales'] = "Demasiados comensales";
+        }
+
+        //validar preparación
+        if(isset($data['preparacion']) && strlen($data['preparacion']) > 12){
+            $errors['preparacion'] = "Recalcula el tiempo";
+        }
+
+        //validar cocinar
+        if(isset($data['cocinar']) && strlen($data['cocinar']) > 12){
+            $errors['cocinar'] = "Recalcula el tiempo";
+        }
+
+        //validar temperatura
+        if(isset($data['temperatura']) && strlen($data['temperatura']) > 7){
+            $errors['temperatura'] = "Demasiada temperatura";
+        }
+
+        //validar ingredientes
+        if(isset($data['ingredientes']) && strlen($data['ingredientes']) > 65000){
+            $errors['ingredientes'] = "Demasiada info";
+        }
+
+        //validar pasos
+        if(isset($data['pasos']) && strlen($data['pasos']) > 65000){
+            $errors['pasos'] = "Demasiada info";
         }
 
         return $errors;
