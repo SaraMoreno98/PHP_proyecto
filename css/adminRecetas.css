@@ -1,0 +1,90 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: content-box;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h2{    
+    max-width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-top: 20px;
+}
+
+form{
+    max-width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+table{
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+th, td{
+    border: 1px solid;
+    padding: 8px;
+    text-align: left;
+}
+
+.td-btn{
+    text-align: center;
+}
+
+th{
+    background-color: rgb(68, 68, 68);
+    color: white;
+    border: 0;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+input[type="text"], input[type="email"], input[type="date"], input[type="number"], select, textarea{
+    padding: 8px;
+    width: calc(100%);
+    box-sizing: border-box;
+    border: 0.5px solid;
+    border-radius: 0.3rem;
+}
+
+textarea{
+    height: 100px;
+}
+
+button{
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding: 12px;
+    border: 0;
+    border-radius: 0.3rem;
+    background-color: rgb(68, 68, 68);
+    color: white;
+    cursor: pointer;
+}
+
+button:hover{
+    background-color: rgb(67, 177, 211);
+}
+
+/* CLASES JAVASCRIPT */
+.edicion{
+    display: none;
+}
+
+.error{
+    color: red;
+    margin-top: 5px;
+}
