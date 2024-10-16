@@ -112,9 +112,6 @@ function getRecetas(){
                 const sanitizedPasos = limpiarHTML(receta.pasos)
                 const tipoSeleccionado = listaTipos.find(tipo => tipo.id == receta.id_tipo)
 
-                console.log(receta)
-                // INTRODUCIR EN LA BASE DE DATOS EL ID_TPO EN RECETAS!!
-
                 let optionsHTML = ''
 
                 listaTipos.forEach(tipo => {
