@@ -101,13 +101,15 @@ function getRecetas(){
         .then(recetas => {
             const tableBody = document.querySelector('#recetasTable tbody')
             tableBody.innerHTML = ''
+            console.log(recetas)
             recetas.forEach(receta => {
                 const sanitizedNombre = limpiarHTML(receta.nombre)
-                const sanitizedDescripcion = limpiarHTML(receta.descripcion)
+                const sanitizedDescripcion = (receta.descripcion == null)? ' ' : limpiarHTML(receta.descripcion)
                 const sanitizedComensales = limpiarHTML(receta.comensales)
                 const sanitizedPreparacion = limpiarHTML(receta.preparacion)
                 const sanitizedCocinar = limpiarHTML(receta.cocinar)
-                const sanitizedTemperatura = limpiarHTML(receta.temperatura)
+            // PARA EVITAR CAMPOR NULOS Y QUE SE MUESTREN TODAS LAS RECETAS UTILIZAR EL SIGUIENTE CODIGO
+                const sanitizedTemperatura = (receta.temperatura == null)? ' ' : limpiarHTML(receta.temperatura)
                 const sanitizedIngredientes = limpiarHTML(receta.ingredientes)
                 const sanitizedPasos = limpiarHTML(receta.pasos)
                 const tipoSeleccionado = listaTipos.find(tipo => tipo.id == receta.id_tipo)
