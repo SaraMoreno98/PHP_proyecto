@@ -74,8 +74,8 @@ $receta = new Receta();
       $pasos = $data['pasos'];
     }
 
-    if(isset($data['nombre']) && isset($data['descripcion']) && isset($data['comensales']) && isset($data['preparacion']) && isset($data['cocinar']) && isset($data['temperatura'], $ingredientes, $pasos)){
-        $id = $receta->create($data['nombre'], $data['descripcion'], $data['comensales'], $data['preparacion'], $data['cocinar'], $data['temperatura'], $ingredientes, $pasos);
+    if(isset($data['img']) && isset($data['nombre']) && isset($data['descripcion']) && isset($data['comensales']) && isset($data['preparacion']) && isset($data['cocinar']) && isset($data['temperatura'], $ingredientes, $pasos)){
+        $id = $receta->create($data['img'], $data['nombre'], $data['descripcion'], $data['comensales'], $data['preparacion'], $data['cocinar'], $data['temperatura'], $ingredientes, $pasos);
         echo json_encode(['id' => $id]);
     }else{
         echo json_encode(['Error' => 'Datos insuficientes']);
@@ -96,8 +96,8 @@ $receta = new Receta();
         $pasos = $data['pasos'];
     }
 
-    if(isset($data['nombre']) && isset($data['descripcion']) && isset($data['comensales']) && isset($data['preparacion']) && isset($data['cocinar']) && isset($data['temperatura'])){
-      $affected = $receta->update($id, $data['nombre'], $data['descripcion'], $data['comensales'], $data['preparacion'], $data['cocinar'], $data['temperatura'], $ingredientes, $pasos);
+    if(isset($data['img']) && isset($data['nombre']) && isset($data['descripcion']) && isset($data['comensales']) && isset($data['preparacion']) && isset($data['cocinar']) && isset($data['temperatura'])){
+      $affected = $receta->update($id,$data['img'],  $data['nombre'], $data['descripcion'], $data['comensales'], $data['preparacion'], $data['cocinar'], $data['temperatura'], $ingredientes, $pasos);
       echo json_encode(['affected' => $affected]); 
     }else{
       echo json_encode(['Error' => 'Datos insuficientes']);

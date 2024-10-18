@@ -1,10 +1,12 @@
 const API_URL_RECETAS = 'http://localhost/PHP/PHP_PROYECTO/php/controllers/recetas.php';
 const API_URL_TIPOS = 'http://localhost/PHP/PHP_PROYECTO/php/controllers/tipos.php';
 const API_URL_ALERGENOS = 'http://localhost/PHP/PHP_PROYECTO/php/controllers/alergenos.php';
+const API_URL_RECETA_ALERGENOS = 'http://localhost/PHP/PHP_PROYECTO/php/controllers/recetas_alergenos.php';
 const errorElement = document.getElementById('createError');
 
 let listaTipos = []
 let listaAlergenos = []
+let listaRecetaAlergenos = []
 
 /**
  * 
@@ -83,17 +85,48 @@ function getTipos(){
         .then(response => response.json())
         .then(tipos => {
             listaTipos = tipos
-            console.log(tipos)
+            // console.log(listaTipos)
             getRecetas()
+            getAlergenos()
             const selectTipo = document.querySelector('#selectTipo')
             mostrarSelectTipo(listaTipos, selectTipo);
         })
         .catch(error => console.log('Error:', error))
 }
 
+function mostrarSelectAlergenos(listaAlergenos, selectAlergeno){
+    selectAlergeno.innerHTML = '';
+    listaAlergenos.forEach(alergeno => {
+        const sanitizedNombre = limpiarHTML(alergeno.nombre);
+        selectAlergeno.innerHTML += `
+            <option value="${alergeno.id}">${sanitizedNombre}</option>
+        `
+    });
+}
 
-// FALTA GET ALERGENOS!!
+function getAlergenos(){
+    fetch(API_URL_ALERGENOS)
+        .then(response => response.json())
+        .then(alergenos => {
+            listaAlergenos = alergenos
+            // console.log(listaAlergenos)
+            // getRecetas()
+            const selectTipo = document.querySelector('#selectTipo')
+            mostrarSelectAlergenos(listaAlergenos, selectTipo);
+        })
+        .catch(error => console.log('Error:', error))
+}
 
+function getRecetaAlergenos(){
+    fetch(API_URL_RECETA_ALERGENOS)
+        .then(response => response.json())
+        .then(receta_alergenos => {
+            listaRecetaAlergenos = receta_alergenos
+            // console.log(listaRecetaAlergenos)
+            getTipos()
+        })
+        .catch(error => console.log('Error:', error))
+}
 
 function getRecetas(){
     fetch(API_URL_RECETAS)
@@ -101,8 +134,24 @@ function getRecetas(){
         .then(recetas => {
             const tableBody = document.querySelector('#recetasTable tbody')
             tableBody.innerHTML = ''
-            console.log(recetas)
+            // console.log(recetas)
             recetas.forEach(receta => {
+                let alergenoPorReceta = listaRecetaAlergenos.filter(id_alergeno => id_alergeno.id_receta == receta.id)
+
+// POR HACER
+
+                let nombreAlergenos = listaAlergenos.filter(nombreAlergeno => listaAlergenos.id == nombreAlergeno.id_alergenos)
+
+                console.log(alergenoPorReceta)
+                alergenosPorRecetaTxt = '<ul>'
+                nombreAlergenos.forEach(nombre => {
+                    alergenosPorRecetaTxt += `
+                        <li>${nombre.nombre}</li>
+                    `
+                })
+                alergenosPorRecetaTxt += '</ul>'
+
+                const sanitizedImg = (receta.img == null)? ' ' : limpiarHTML(receta.img)
                 const sanitizedNombre = limpiarHTML(receta.nombre)
                 const sanitizedDescripcion = (receta.descripcion == null)? ' ' : limpiarHTML(receta.descripcion)
                 const sanitizedComensales = limpiarHTML(receta.comensales)
@@ -137,6 +186,10 @@ function getRecetas(){
                             <select class="edicion">${optionsHTML}</select>
                         </td>
                         <td>
+                            <img class="listado" src="${sanitizedImg}" alt="" width="150px">
+                            <input class="edicion" type="text" value="${sanitizedImg}">
+                        </td>
+                        <td>
                             <span class="listado">${sanitizedNombre}</span>
                             <input class="edicion" type="text" value="${sanitizedNombre}">
                         </td>
@@ -165,6 +218,11 @@ function getRecetas(){
                             <textarea class="edicion">${sanitizedIngredientes}</textarea>
                         </td>
                         <td>
+                            <span class="listado">${alergenosPorRecetaTxt}</span>
+                            
+                        </td>
+
+                        <td>
                             <span class="listado">${sanitizedPasos}</span>
                             <textarea class="edicion">${sanitizedPasos}</textarea>
                         </td>
@@ -183,7 +241,7 @@ function getRecetas(){
 
 
 
-// TAS QUEDAO POR AQUI
+// SIGUES POR AQUI
 
 
 
@@ -325,4 +383,4 @@ function getRecetas(){
 // document.getElementById('createForm').addEventListener('submit', createReceta)
 
 // DOMContentLoaded -> Cuando el documento se ha cargado por completo llama a la funcion
-document.addEventListener('DOMContentLoaded', getTipos)
+document.addEventListener('DOMContentLoaded', getRecetaAlergenos)

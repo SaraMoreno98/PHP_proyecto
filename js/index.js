@@ -88,7 +88,7 @@ function getRecetas(){
                 cuerpo.innerHTML += `
                     <div class="tarjetas">
                         <div>
-                            <img src="administracion/${receta.img}" alt="Poster de película">
+                            <img src="${receta.img}" alt="">
                         </div>
                         <div class="info">
                         <h2>${receta.nombre}</h2>
