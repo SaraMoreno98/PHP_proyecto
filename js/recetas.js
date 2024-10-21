@@ -28,11 +28,11 @@ function limpiarHTML(str){
     });
 }
 
-function validaciones(titulo, descripcion, comensales, preparacion, cocinar, temperatura, ingredientes, pasos){
+function validaciones(nombre, descripcion, comensales, preparacion, cocinar, temperatura, ingredientes, pasos){
     let errores = [];
 
-    if(titulo.length <= 2 || titulo.length >= 50){
-        errores.push('El titulo debe tener entre 2 y 50 caracteres.');
+    if(nombre.length <= 2 || nombre.length >= 50){
+        errores.push('El nombre debe tener entre 2 y 50 caracteres.');
     }
     
     if(descripcion.length <= 2 || descripcion.length >= 250){
@@ -86,46 +86,92 @@ function getTipos(){
         .then(tipos => {
             listaTipos = tipos
             // console.log(listaTipos)
-            getRecetas()
-            getAlergenos()
             const selectTipo = document.querySelector('#selectTipo')
             mostrarSelectTipo(listaTipos, selectTipo);
+            getAlergenos()
+            getRecetas()
         })
         .catch(error => console.log('Error:', error))
 }
 
-function mostrarSelectAlergenos(listaAlergenos, selectAlergeno){
-    selectAlergeno.innerHTML = '';
+// function mostrarSelectAlergenos(listaAlergenos, selectAlergeno){
+//     selectAlergeno.innerHTML = '';
+//     listaAlergenos.forEach(alergeno => {
+//         const sanitizedNombre = limpiarHTML(alergeno.nombre);
+//         selectAlergeno.innerHTML += `
+//             <option value="${alergeno.id}">${sanitizedNombre}</option>
+//         `
+//     });
+// }
+
+// function getAlergenos(){
+//     fetch(API_URL_ALERGENOS)
+//         .then(response => response.json())
+//         .then(alergenos => {
+//             listaAlergenos = alergenos
+//             // console.log(listaAlergenos)
+//             // getRecetas()
+//             const selectTipo = document.querySelector('#selectAlergenos')
+//             mostrarSelectAlergenos(listaAlergenos, selectTipo);
+//         })
+//         .catch(error => console.log('Error:', error))
+// }
+
+// function getRecetaAlergenos(){
+//     fetch(API_URL_RECETA_ALERGENOS)
+//         .then(response => response.json())
+//         .then(receta_alergenos => {
+//             listaRecetaAlergenos = receta_alergenos
+//             // console.log(listaRecetaAlergenos)
+//             getTipos()
+//         })
+//         .catch(error => console.log('Error:', error))
+// }
+
+function mostrarSelectAlergenos(listaAlergenos, contenedorAlergenos) {
+    contenedorAlergenos.innerHTML = ''; // Limpia el contenedor
+
     listaAlergenos.forEach(alergeno => {
         const sanitizedNombre = limpiarHTML(alergeno.nombre);
-        selectAlergeno.innerHTML += `
-            <option value="${alergeno.id}">${sanitizedNombre}</option>
-        `
+        contenedorAlergenos.innerHTML += `
+            <label>
+                <input type="checkbox" id="createAlergenos" value="${alergeno.id}" class="alergeno-checkbox">
+                ${sanitizedNombre}
+            </label>
+        `;
     });
 }
 
-function getAlergenos(){
+function getAlergenos() {
     fetch(API_URL_ALERGENOS)
         .then(response => response.json())
         .then(alergenos => {
-            listaAlergenos = alergenos
-            // console.log(listaAlergenos)
-            // getRecetas()
-            const selectTipo = document.querySelector('#selectTipo')
-            mostrarSelectAlergenos(listaAlergenos, selectTipo);
+            listaAlergenos = alergenos;
+            const contenedorAlergenos = document.querySelector('#selectAlergenos');
+            mostrarSelectAlergenos(listaAlergenos, contenedorAlergenos);
         })
-        .catch(error => console.log('Error:', error))
+        .catch(error => console.log('Error:', error));
 }
 
-function getRecetaAlergenos(){
+function getRecetaAlergenos() {
     fetch(API_URL_RECETA_ALERGENOS)
         .then(response => response.json())
         .then(receta_alergenos => {
-            listaRecetaAlergenos = receta_alergenos
-            // console.log(listaRecetaAlergenos)
-            getTipos()
+            listaRecetaAlergenos = receta_alergenos;
+            // getAlergenos(); // Llama para obtener los alérgenos después de recuperar las relaciones
+
+            // Aquí puedes seleccionar los checkboxes de alérgenos previamente seleccionados
+            const idsAlergenosReceta = listaRecetaAlergenos.map(relacion => relacion.id_alergenos);
+
+            // Marca los checkboxes correspondientes
+            idsAlergenosReceta.forEach(id => {
+                const checkbox = document.querySelector(`input[type="checkbox"][value="${id}"]`);
+                if (checkbox) {
+                    checkbox.checked = true; // Marca el checkbox como seleccionado
+                }
+            });
         })
-        .catch(error => console.log('Error:', error))
+        .catch(error => console.log('Error:', error));
 }
 
 function getRecetas(){
@@ -134,22 +180,23 @@ function getRecetas(){
         .then(recetas => {
             const tableBody = document.querySelector('#recetasTable tbody')
             tableBody.innerHTML = ''
-            // console.log(recetas)
+
             recetas.forEach(receta => {
-                let alergenoPorReceta = listaRecetaAlergenos.filter(id_alergeno => id_alergeno.id_receta == receta.id)
+                // Filtra los alérgenos relacionados con la receta actual
+                let alergenoPorReceta = listaRecetaAlergenos.filter(relacion => relacion.id_receta === receta.id);
+                let idsAlergenosReceta = alergenoPorReceta.map(relacion => relacion.id_alergenos);
 
-// POR HACER
 
-                let nombreAlergenos = listaAlergenos.filter(nombreAlergeno => listaAlergenos.id == nombreAlergeno.id_alergenos)
+                let alergenosPorRecetaTxt = '<ul>';
+                idsAlergenosReceta.forEach(id => {
+                    let alergeno = listaAlergenos.find(a => a.id === id);
+                    if (alergeno) {
+                        alergenosPorRecetaTxt += `<li>${limpiarHTML(alergeno.nombre)}</li>`;
+                    }
+                });
+                alergenosPorRecetaTxt += '</ul>';
 
-                console.log(alergenoPorReceta)
-                alergenosPorRecetaTxt = '<ul>'
-                nombreAlergenos.forEach(nombre => {
-                    alergenosPorRecetaTxt += `
-                        <li>${nombre.nombre}</li>
-                    `
-                })
-                alergenosPorRecetaTxt += '</ul>'
+                // console.log(alergenosPorRecetaTxt)
 
                 const sanitizedImg = (receta.img == null)? ' ' : limpiarHTML(receta.img)
                 const sanitizedNombre = limpiarHTML(receta.nombre)
@@ -219,7 +266,14 @@ function getRecetas(){
                         </td>
                         <td>
                             <span class="listado">${alergenosPorRecetaTxt}</span>
-                            
+                            <div class="edicion" style="display: none;">
+                                ${listaAlergenos.map(alergeno => `
+                                    <label>
+                                        <input type="checkbox" value="${alergeno.id}" class="alergeno-checkbox" ${idsAlergenosReceta.includes(alergeno.id) ? 'checked' : ''}>
+                                        ${limpiarHTML(alergeno.nombre)}
+                                    </label>
+                                `).join('')}
+                            </div>
                         </td>
 
                         <td>
@@ -239,99 +293,113 @@ function getRecetas(){
         .catch(error => console.log('Error:', error))
 }
 
+// CREAR RECETAS
+function createReceta(event){
+    event.preventDefault();
+    const nombre = document.getElementById('createNombre').value.trim();
+    const tipo = document.getElementById('selectTipo').value.trim();
+    const descripcion = document.getElementById('createDescripcion').value.trim();
+    const comensales = document.getElementById('createComesales').value.trim();
+    const preparacion = document.getElementById('createPreparacion').value.trim();
+    const cocinar = document.getElementById('createCocinar').value.trim();
+    const temperatura = document.getElementById('createTemperatura').value.trim();
+    const ingredientes = document.getElementById('createIngredientes').value.trim();
+    const alergenos = document.getElementById('createAlergenos').value.trim();
+    const pasos = document.getElementById('createPasos').value.trim();
+
+    let erroresValidaciones = validaciones(nombre, tipo, descripcion, comensales, preparacion, cocinar, temperatura, ingredientes, alergenos, pasos);
+    
+    if(erroresValidaciones.length > 0){
+        mostrarErrores(erroresValidaciones);
+        return;
+    }
+
+    errorElement.textContent = '';
+
+    // Envio al comprobdor los datos
+    fetch(API_URL_RECETAS, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({nombre, tipo, descripcion, comensales, preparacion, cocinar, temperatura, ingredientes, alergenos, pasos})
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log('Pelicula creada: ', result);
+        if(!parseInt(result['id'])){
+            erroresApi = Object.values(result['id']);
+            console.log("erroresApi:",  erroresApi);
+            mostrarErrores(erroresApi);
+        }else{
+            getRecetas();
+        }
+
+        event.target.reset();
+    })
+    .catch(error => {
+        console.log('Error: ', JSON.stringify(error));
+    })
+}
+
+// GUARDAR NUEVOS DATOS DE RECETA
+function updateReceta(id){
+    // Seleccionamos la fila que queremos editar
+    const row = document.querySelector(`tr[data-id="${id}"]`)
+    const newTipo = row.querySelector('td:nth-child(2) input').value.trim()
+    const newImagen = row.querySelector('td:nth-child(3) input').value.trim()
+    const newNombre = row.querySelector('td:nth-child(4) select').value.trim()
+    const newDescripcion = row.querySelector('td:nth-child(5) select').value.trim()
+    const newComensales = row.querySelector('td:nth-child(6) select').value.trim()
+    const newPreparacion = row.querySelector('td:nth-child(7) select').value.trim()
+    const newCocinar = row.querySelector('td:nth-child(8) select').value.trim()
+    const newTemperatura = row.querySelector('td:nth-child(9) select').value.trim()
+    const newIngredientes = row.querySelector('td:nth-child(10) select').value.trim()
+    const newAlergenos = row.querySelector('td:nth-child(11) select').value.trim()
+    const newPasos = row.querySelector('td:nth-child(12) select').value.trim()
+
+    let erroresValidaciones = validaciones(newTipo, newImagen, newNombre, newDescripcion, newComensales, newPreparacion, newCocinar, newTemperatura, newIngredientes, newAlergenos, newPasos);
+    if(erroresValidaciones.length > 0){
+        mostrarErrores(erroresValidaciones);
+        return;
+    }
+    errorElement.innerHTML = '';
+
+    fetch(`${API_URL_RECETAS}?id=${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({tipo: newTipo, imagen: newImagen, nombre: newNombre, descripcion: newDescripcion, comensales: newComensales, preparacion: newPreparacion, cocinar: newCocinar, temperatura: newTemperatura, ingredientes: newIngredientes, alergenos: newAlergenos, pasos: newPasos})
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log('Receta actualizada: ', result)
+        if(!esEntero(result['affected'])){
+            erroresApi = Object.values(result['affected']);
+            mostrarErrores(erroresApi);
+        }else{
+            getRecetas();
+        }
+    })
+    .catch(error => {
+        console.log('Error: ', error)
+        alert("Error al actualizar la receta. Por favor intentelo de nuevo")
+    })
+}
+
+function mostrarErrores(errores){
+    errorElement.innerHTML = '<ul>';
+    errores.forEach(error => {
+        return errorElement.innerHTML += `<li>${error}</li>`;
+    })
+    errorElement.innerHTML += '</ul>';
+}
+
 
 
 // SIGUES POR AQUI
 
-
-
-// // CREAR RECETAS
-// function createReceta(event){
-//     event.preventDefault();
-//     const titulo = document.getElementById('createTitulo').value.trim();
-//     const precio = document.getElementById('createPrecio').value.trim();
-//     const id_director = document.getElementById('createDirector').value.trim();
-
-//     let erroresValidaciones = validaciones(titulo, precio, id_director);
-    
-//     if(erroresValidaciones.length > 0){
-//         mostrarErrores(erroresValidaciones);
-//         return;
-//     }
-
-//     errorElement.textContent = '';
-
-//     // Envio al comprobdor los datos
-//     fetch(API_URL_PELICULAS, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({titulo, precio, id_director})
-//     })
-//     .then(response => response.json())
-//     .then(result => {
-//         console.log('Pelicula creada: ', result);
-//         if(!parseInt(result['id'])){
-//             erroresApi = Object.values(result['id']);
-//             console.log("erroresApi:",  erroresApi);
-//             mostrarErrores(erroresApi);
-//         }else{
-//             getRecetas();
-//         }
-
-//         event.target.reset();
-//     })
-//     .catch(error => {
-//         console.log('Error: ', JSON.stringify(error));
-//     })
-// }
-
-// // GUARDAR NUEVOS DATOS DE RECETA
-// function updateReceta(id){
-//     // Seleccionamos la fila que queremos editar
-//     const row = document.querySelector(`tr[data-id="${id}"]`)
-//     const newTitulo = row.querySelector('td:nth-child(2) input').value.trim()
-//     const newPrecio = row.querySelector('td:nth-child(3) input').value.trim()
-//     const newIdDirector = row.querySelector('td:nth-child(4) select').value.trim()
-
-//     let erroresValidaciones = validaciones(newTitulo, newPrecio, newIdDirector);
-//     if(erroresValidaciones.length > 0){
-//         mostrarErrores(erroresValidaciones);
-//         return;
-//     }
-//     errorElement.innerHTML = '';
-
-//     fetch(`${API_URL_PELICULAS}?id=${id}`, {
-//         method: 'PUT',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({titulo: newTitulo, precio: newPrecio, id_director: newIdDirector})
-//     })
-//     .then(response => response.json())
-//     .then(result => {
-//         console.log('Película actualizada: ', result)
-//         if(!esEntero(result['affected'])){
-//             erroresApi = Object.values(result['affected']);
-//             mostrarErrores(erroresApi);
-//         }else{
-//             getRecetas();
-//         }
-//     })
-//     .catch(error => {
-//         console.log('Error: ', error)
-//         alert("Error al actualizar la película. Por favor intentelo de nuevo")
-//     })
-// }
-
-// function mostrarErrores(errores){
-//     errorElement.innerHTML = '<ul>';
-//     errores.forEach(error => {
-//         return errorElement.innerHTML += `<li>${error}</li>`;
-//     })
-//     errorElement.innerHTML += '</ul>';
-// }
 
 // // EDITAR CAMPOS
 // function editMode(id){
@@ -363,24 +431,27 @@ function getRecetas(){
 //     })
 // }
 
-// // ELIMINAR RECETAS
-// function deleteReceta(id){
-//     if(confirm('¿Estas seguro de que quieres eliminar esta pelicula?')){
-//         fetch(`${API_URL_PELICULAS}?id=${id}`, {
-//             method: 'DELETE',
-//         })
-//         .then(response => response.json())
-//         .then(result => {
-//             console.log('Usuario eliminado: ', result)
-//             getRecetas()
-//         })
-//         .catch(error => {
-//             console.log('Error: ', error)
-//         })
-//     }
-// }
+// ELIMINAR RECETAS
+function deleteReceta(id){
+    if(confirm('¿Estas seguro de que quieres eliminar esta receta?')){
+        fetch(`${API_URL_RECETAS}?id=${id}`, {
+            method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log('Receta eliminada: ', result)
+            getRecetas()
+        })
+        .catch(error => {
+            console.log('Error: ', error)
+        })
+    }
+}
 
-// document.getElementById('createForm').addEventListener('submit', createReceta)
+document.getElementById('createForm').addEventListener('submit', createReceta)
 
 // DOMContentLoaded -> Cuando el documento se ha cargado por completo llama a la funcion
-document.addEventListener('DOMContentLoaded', getRecetaAlergenos)
+document.addEventListener('DOMContentLoaded', () => {
+    getTipos(); // Llama a obtener tipos al cargar el DOM
+    getRecetaAlergenos(); // Llama a obtener relaciones entre recetas y alérgenos
+});
