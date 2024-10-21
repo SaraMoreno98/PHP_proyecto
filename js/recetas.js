@@ -396,40 +396,35 @@ function mostrarErrores(errores){
     errorElement.innerHTML += '</ul>';
 }
 
+// EDITAR CAMPOS
+function editMode(id){
+    errorElement.innerHTML = '';
+    // Seleccionamos la fila que queremos editar
+    const row = document.querySelector(`tr[data-id="${id}"]`)
+    // Cambiamos el estilo y la visibilidad de la fila
+    row.querySelectorAll('.edicion').forEach(ro => {
+        ro.style.display = 'inline-block'
+    })
 
+    row.querySelectorAll('.listado').forEach(ro =>{
+        ro.style.display = 'none'
+    })
+}
 
-// SIGUES POR AQUI
+// CANCELAR EDICION
+function cancelEdit(id){
+    errorElement.innerHTML = '';
+    // Seleccionamos la fila que queremos editar
+    const row = document.querySelector(`tr[data-id="${id}"]`)
+    // Cambiamos el estilo y la visibilidad de la fila
+    row.querySelectorAll('.edicion').forEach(ro => {
+        ro.style.display = 'none'
+    })
 
-
-// // EDITAR CAMPOS
-// function editMode(id){
-//     errorElement.innerHTML = '';
-//     // Seleccionamos la fila que queremos editar
-//     const row = document.querySelector(`tr[data-id="${id}"]`)
-//     // Cambiamos el estilo y la visibilidad de la fila
-//     row.querySelectorAll('.edicion').forEach(ro => {
-//         ro.style.display = 'inline-block'
-//     })
-
-//     row.querySelectorAll('.listado').forEach(ro =>{
-//         ro.style.display = 'none'
-//     })
-// }
-
-// // CANCELAR EDICION
-// function cancelEdit(id){
-//     errorElement.innerHTML = '';
-//     // Seleccionamos la fila que queremos editar
-//     const row = document.querySelector(`tr[data-id="${id}"]`)
-//     // Cambiamos el estilo y la visibilidad de la fila
-//     row.querySelectorAll('.edicion').forEach(ro => {
-//         ro.style.display = 'none'
-//     })
-
-//     row.querySelectorAll('.listado').forEach(ro =>{
-//         ro.style.display = 'inline-block'
-//     })
-// }
+    row.querySelectorAll('.listado').forEach(ro =>{
+        ro.style.display = 'inline-block'
+    })
+}
 
 // ELIMINAR RECETAS
 function deleteReceta(id){
