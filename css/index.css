@@ -87,9 +87,8 @@ p{
     font-size: large;
 }
 
-.precioModal{
+.datosModal{
     font-size: large;
-    text-align: right;
 }
 
 .director{
@@ -139,23 +138,59 @@ button:hover{
         width: 80%;
     }
 
+    .parent {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(7);
+    }
+    
+    .img_modal { grid-area: 1 / 1 / 2 / 4; }
+
+    .info_modal { grid-area: 2 / 1 / 5 / 4; }
+
+    .ingre_modal {
+        grid-area: 5 / 1 / 6 / 2;
+        margin-top: 16px;
+        padding: 16px;
+        background-color: rgb(253, 242, 228);
+        border-radius: 0.3rem;
+
+    }
+
+    .receta_modal {
+        grid-area: 5 / 2 / 6 / 4;
+        margin-top: 16px;
+        padding: 16px;
+    }
+
+    .alerg_modal { grid-area: 6 / 1 / 7 / 4; }
+
+    .download_modal { grid-area: 7 / 1 / 8 / 4; }
+
     .modal_content img{
-        height: 100%;
-        width: 200px;
-        border-radius: 0;
+        height: 400px;
+        width: 95%;
+        margin-right: 5%;
+        border-radius: 0.3rem;
     }
 
-    .parent{
-        display: flex;
-        flex-direction: row;
-        gap: 24px;
+    hr{
+        margin-top: 16px;
+        margin-bottom: 16px;
     }
 
-    .mainInfo{
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
+    .separation{
+        border-top: 2px dotted #aaa;
     }
+
+    .mainDatos {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: 1fr;
+    }
+    
+    .datillos1 { grid-area: 1 / 1 / 2 / 2; }
+    .datillos2 { grid-area: 1 / 2 / 2 / 3; }
     
     /* BOTON DE CERRADO */
     .close {

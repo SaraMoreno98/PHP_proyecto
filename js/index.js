@@ -4,7 +4,7 @@ const API_URL_ALERGENOS = 'http://localhost/PHP/PHP_PROYECTO/php/controllers/ale
 
 let listaRecetas = []
 let listaTipos = []
-// let listaAlergenos = []
+let listaAlergenos = []
 
 function mostrarModal (e){
     id = e.target.getAttribute('data-id')
@@ -12,8 +12,6 @@ function mostrarModal (e){
 
     receta = listaRecetas.find(receta => receta.id == id)
     tipoSeleccionado = listaTipos.find(tipo => receta.id_tipo == tipo.id)
-
-    // console.log(receta)
 
     // Get the modal
     var modalMain = document.getElementById("myBtn");
@@ -24,14 +22,49 @@ function mostrarModal (e){
     modal.innerHTML += `
         <span class="close">&times;</span>
         <div class="parent">
-            <div class="div1">
-                <img src="administracion/${receta.img}" alt="Imagen de receta">
+            <div class="img_modal">
+                <img src="${receta.img}" alt="Imagen de receta">
             </div>
-            <div class="mainInfo">
+            <div class="info_modal">
                 <h2>${receta.nombre}</h2>
-                <span class="descripcion">${receta.descripcion}</span>
                 <hr>
-                <span class="precioModal">${receta.comensales}</span>
+                <p class="descripcion">
+                    ${receta.descripcion !== null ? receta.descripcion : ' '}
+                </p>
+                    ${receta.descripcion !== null ? '<hr>' : ' '}
+                <div class="mainDatos">
+                    <div class="datillos1">
+                        <span class="datosModal">
+                            ${receta.comensales !== null ? `Comesales: ${receta.comensales}` : ''}
+                        </span>
+                        <br>                        
+                        <span class="datosModal">
+                            ${receta.preparacion !== null ? `Tiempo de preparación: ${receta.preparacion}` : ''}
+                        </span>
+                    </div>
+                    <div class="datillos2">
+                        <span class="datosModal">
+                            ${receta.cocinar !== null ? `Tiempo de cocina: ${receta.cocinar}` : ''}
+                        </span>
+                        <br>
+                        <span class="datosModal">
+                            ${receta.temperatura !== null ? `Temperatura: ${receta.temperatura}` : ''}
+                        </span>
+                    </div>
+                </div>
+                <hr class="separation">
+            </div>
+            <div class="ingre_modal">
+                <span>${receta.ingredientes}</span>
+            </div>
+            <div class="receta_modal">
+                <span>${receta.pasos}</span>
+            </div>
+            <div class="alerg_modal">
+                <span>${receta.alergenos}</span>
+            </div>
+            <div class="download_modal">
+                <p>INSERTAR BOTON QUE DESCARGUE LA INFO DEL MODAL CON SU ESTRUCTURA</p>
             </div>
         </div>
     `

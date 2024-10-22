@@ -89,7 +89,6 @@ function getTipos(){
             const selectTipo = document.querySelector('#selectTipo')
             mostrarSelectTipo(listaTipos, selectTipo);
             getAlergenos()
-            getRecetas()
         })
         .catch(error => console.log('Error:', error))
 }
@@ -146,6 +145,7 @@ function getAlergenos() {
     fetch(API_URL_ALERGENOS)
         .then(response => response.json())
         .then(alergenos => {
+            getRecetaAlergenos()
             listaAlergenos = alergenos;
             const contenedorAlergenos = document.querySelector('#selectAlergenos');
             mostrarSelectAlergenos(listaAlergenos, contenedorAlergenos);
@@ -157,6 +157,7 @@ function getRecetaAlergenos() {
     fetch(API_URL_RECETA_ALERGENOS)
         .then(response => response.json())
         .then(receta_alergenos => {
+            getRecetas()
             listaRecetaAlergenos = receta_alergenos;
             // getAlergenos(); // Llama para obtener los alérgenos después de recuperar las relaciones
 
@@ -448,5 +449,5 @@ document.getElementById('createForm').addEventListener('submit', createReceta)
 // DOMContentLoaded -> Cuando el documento se ha cargado por completo llama a la funcion
 document.addEventListener('DOMContentLoaded', () => {
     getTipos(); // Llama a obtener tipos al cargar el DOM
-    getRecetaAlergenos(); // Llama a obtener relaciones entre recetas y alérgenos
+    // getRecetaAlergenos(); // Llama a obtener relaciones entre recetas y alérgenos
 });
