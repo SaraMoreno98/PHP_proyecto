@@ -93,40 +93,6 @@ function getTipos(){
         .catch(error => console.log('Error:', error))
 }
 
-// function mostrarSelectAlergenos(listaAlergenos, selectAlergeno){
-//     selectAlergeno.innerHTML = '';
-//     listaAlergenos.forEach(alergeno => {
-//         const sanitizedNombre = limpiarHTML(alergeno.nombre);
-//         selectAlergeno.innerHTML += `
-//             <option value="${alergeno.id}">${sanitizedNombre}</option>
-//         `
-//     });
-// }
-
-// function getAlergenos(){
-//     fetch(API_URL_ALERGENOS)
-//         .then(response => response.json())
-//         .then(alergenos => {
-//             listaAlergenos = alergenos
-//             // console.log(listaAlergenos)
-//             // getRecetas()
-//             const selectTipo = document.querySelector('#selectAlergenos')
-//             mostrarSelectAlergenos(listaAlergenos, selectTipo);
-//         })
-//         .catch(error => console.log('Error:', error))
-// }
-
-// function getRecetaAlergenos(){
-//     fetch(API_URL_RECETA_ALERGENOS)
-//         .then(response => response.json())
-//         .then(receta_alergenos => {
-//             listaRecetaAlergenos = receta_alergenos
-//             // console.log(listaRecetaAlergenos)
-//             getTipos()
-//         })
-//         .catch(error => console.log('Error:', error))
-// }
-
 function mostrarSelectAlergenos(listaAlergenos, contenedorAlergenos) {
     contenedorAlergenos.innerHTML = ''; // Limpia el contenedor
 
@@ -159,7 +125,6 @@ function getRecetaAlergenos() {
         .then(receta_alergenos => {
             getRecetas()
             listaRecetaAlergenos = receta_alergenos;
-            // getAlergenos(); // Llama para obtener los alérgenos después de recuperar las relaciones
 
             // Aquí puedes seleccionar los checkboxes de alérgenos previamente seleccionados
             const idsAlergenosReceta = listaRecetaAlergenos.map(relacion => relacion.id_alergenos);
