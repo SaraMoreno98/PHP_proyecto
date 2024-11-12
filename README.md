@@ -56,10 +56,6 @@ El proyecto se divide en dos partes principales:
 3. Importar la estructura de la base de datos.
 4. Ejecutar el proyecto en un servidor web.
 
-## Documentación
-
-Puedes encontrar la documentación técnica detallada en el archivo [documentacionProyecto_SaraMorenoOntiveros.pdf](documentacionProyecto_SaraMorenoOntiveros.pdf).
-
 ## Contacto y soporte
 
 - GitHub: [@SaraMoreno98](https://github.com/SaraMoreno98)
