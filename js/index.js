@@ -1,113 +1,116 @@
+// URLs de las APIs
 const API_URL_RECETAS = 'http://localhost/PHP/PHP_PROYECTO/php/controllers/recetas.php';
 const API_URL_TIPOS = 'http://localhost/PHP/PHP_PROYECTO/php/controllers/tipos.php';
 const API_URL_ALERGENOS = 'http://localhost/PHP/PHP_PROYECTO/php/controllers/alergenos.php';
-const API_URL_RECETAS_ALERGENOS = 'http://localhost/PHP/PHP_PROYECTO/php/controllers/recetas_alergenos.php';
+const API_URL_RECETA_ALERGENOS = 'http://localhost/PHP/PHP_PROYECTO/php/controllers/recetas_alergenos.php';
 
+// Arrays para almacenar datos
 let listaRecetas = []
 let listaTipos = []
 let listaAlergenos = []
+let listaAlergenosReceta = []
 
+/**
+ * Muestra el modal con la información detallada de una receta
+ * @param {Event} e - Evento del click
+ */
 function mostrarModal (e){
+    // Obtiene el ID de la receta desde el botón
     id = e.target.getAttribute('data-id')
     receta = listaRecetas.find(receta => receta.id == id)
-    // tipoSeleccionado = listaTipos.find(tipo => receta.id_tipo == tipo.id)
 
-    // Get the modal
+    // Obtiene elementos del modal
     var modalMain = document.getElementById("myBtn");
     var modal = document.getElementById("modalContent");
 
-    fetch(`${API_URL_RECETAS_ALERGENOS}?id_receta=${receta.id}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        
-        .then(alergenosReceta => {
-            console.log('Alérgenos de la receta:', alergenosReceta);
+    // Obtiene los alérgenos de la receta
+    fetch(API_URL_RECETA_ALERGENOS)
+        .then(response => response.json())
+        .then(receta_alergenos => {
+            getRecetas()
+            listaAlergenosReceta = receta_alergenos;
 
-            // Obtener los IDs de los alérgenos
-            const idsAlergenos = alergenosReceta.map(relacion => relacion.id_alergenos);
-            // Hacer una llamada a la API de alérgenos para obtener los nombres
-            return fetch(`${API_URL_ALERGENOS}?ids=${idsAlergenos.join(',')}`)
-                .then(res => res.json())
-        })
-        .then(alergenos => {
-            const nombresAlergenos = alergenos.map(alergenos => alergenos.nombre).filter(nombre => nombre)
+            // Filtra los alérgenos de la receta actual
+            const idsAlergenosReceta = listaAlergenosReceta
+                // Filtrar solo los alérgenos de la receta actual
+                .filter(relacion => relacion.id_receta == id)
+                .map(relacion => relacion.id_alergenos);
 
-        modal.innerHTML = ''
+            // Construye el texto de alérgenos
+            let alergenosPorRecetaTxt = '';
+            idsAlergenosReceta.forEach(id => {
+                let alergeno = listaAlergenos.find(a => a.id === id);
+                if (alergeno) {
+                    alergenosPorRecetaTxt += `${alergeno.nombre} `;
+                }
+            });
 
-        modal.innerHTML += `
-            <span class="close">&times;</span>
-            <div class="parent">
-                <div class="img_modal">
-                    <img src="${receta.img}" alt="Imagen de receta">
-                </div>
-                <div class="info_modal">
-                    <h2>${receta.nombre}</h2>
-                    <hr>
-                    <p class="descripcion">
-                        ${receta.descripcion !== null ? receta.descripcion : ' '}
-                    </p>
-                        ${receta.descripcion !== null ? '<hr>' : ' '}
-                    <div class="mainDatos">
-                        <div class="datillos1">
-                            <span class="datosModal">
-                                ${receta.comensales !== null ? `Comesales: ${receta.comensales}` : ''}
-                            </span>
-                            <br>                        
-                            <span class="datosModal">
-                                ${receta.preparacion !== null ? `Tiempo de preparación: ${receta.preparacion}` : ''}
-                            </span>
-                        </div>
-                        <div class="datillos2">
-                            <span class="datosModal">
-                                ${receta.cocinar !== null ? `Tiempo de cocina: ${receta.cocinar}` : ''}
-                            </span>
-                            <br>
-                            <span class="datosModal">
-                                ${receta.temperatura !== null ? `Temperatura: ${receta.temperatura}` : ''}
-                            </span>
-                        </div>
+            // Construye el contenido del modal
+            modal.innerHTML = ''
+
+            modal.innerHTML += `
+                <span class="close">&times;</span>
+                <div class="parent">
+                    <div class="img_modal">
+                        <img src="${receta.img}" alt="Imagen de receta">
                     </div>
-                    <hr class="separation">
+                    <div class="info_modal">
+                        <h2>${receta.nombre}</h2>
+                        <hr>
+                        <p class="descripcion">
+                            ${receta.descripcion !== null ? receta.descripcion : ' '}
+                        </p>
+                            ${receta.descripcion !== null ? '<hr>' : ' '}
+                        <div class="mainDatos">
+                            <div class="datillos1">
+                                <span class="datosModal">
+                                    ${receta.comensales !== null ? `Comesales: ${receta.comensales}` : ''}
+                                </span>
+                                <br>                        
+                                <span class="datosModal">
+                                    ${receta.preparacion !== null ? `Tiempo de preparación: ${receta.preparacion}` : ''}
+                                </span>
+                            </div>
+                            <div class="datillos2">
+                                <span class="datosModal">
+                                    ${receta.cocinar !== null ? `Tiempo de cocina: ${receta.cocinar}` : ''}
+                                </span>
+                                <br>
+                                <span class="datosModal">
+                                    ${receta.temperatura !== null ? `Temperatura: ${receta.temperatura}` : ''}
+                                </span>
+                            </div>
+                        </div>
+                        <hr class="separation">
+                    </div>
+                    <div class="ingre_modal">
+                        <span>${receta.ingredientes}</span>
+                    </div>
+                    <div class="receta_modal">
+                        <span>${receta.pasos}</span>
+                    </div>
+                    <div class="alerg_modal">
+                        <h2>Alérgenos</h2>
+                        ${alergenosPorRecetaTxt}
+                    </div>
                 </div>
-                <div class="ingre_modal">
-                    <span>${receta.ingredientes}</span>
-                </div>
-                <div class="receta_modal">
-                    <span>${receta.pasos}</span>
-                </div>
-                <div class="alerg_modal">
-                    <ul>
-                        ${nombresAlergenos.length > 0 ? nombresAlergenos.map(nombre => `<li>${nombre}</li>`).join('') : '<p>No hay alérgenos asociados.</p>'}
-                    </ul>
-                </div>
-                <div class="download_modal">
-                    <p>INSERTAR BOTON QUE DESCARGUE LA INFO DEL MODAL CON SU ESTRUCTURA</p>
-                </div>
-            </div>
-        `
+            `
+            // Muestra el modal
+            modalMain.style.display = "block"
 
-        modalMain.style.display = "block"
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-        
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-        modalMain.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modalMain) {
-                modalMain.style.display = "none";
+            // Configura el cierre del modal
+            var span = document.getElementsByClassName("close")[0];
+            span.onclick = function() {
+            modalMain.style.display = "none";
             }
-        }
-    })
-    .catch(error => console.log('Error:', error));
+
+            // Cierra el modal al hacer clic fuera
+            window.onclick = function(event) {
+                if (event.target == modalMain) {
+                    modalMain.style.display = "none";
+                }
+            }
+        })
 }
 
 function getTipos(){
@@ -125,53 +128,74 @@ function getAlergenos(){
         .then(response => response.json())
         .then(alergenos => {
             listaAlergenos = alergenos
+            // console.log(listaAlergenos)
             getRecetas()
         })
         .catch(error => console.log('Error:', error))
 }
 
-function getRecetas(){
+function getRecetas() {
     fetch(API_URL_RECETAS)
         .then(response => response.json())
         .then(recetas => {
-            listaRecetas = recetas
-            const cuerpo = document.querySelector('#mainContainer')
-            cuerpo.innerHTML = ''
+            listaRecetas = recetas;
+            mostrarRecetas(recetas); // Mostrar todas las recetas inicialmente
 
-            recetas.forEach(receta => {
-                tipoSeleccionado = listaTipos.find(tipo => receta.id_tipo == tipo.id)
+            const enlacesTipo = document.querySelectorAll('.nav');
+            enlacesTipo.forEach(enlace => {
+                enlace.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tipoSeleccionado = e.target.getAttribute('data-tipo');
+                    if (tipoSeleccionado === 'all') {
+                        mostrarRecetas(listaRecetas); // Mostrar todas las recetas
+                        document.getElementById('mostrar-todas').style.display = 'none'; // Ocultar enlace después de mostrar todas
+                    } else {
+                        filtrarRecetasPorTipo(tipoSeleccionado);
+                        document.getElementById('mostrar-todas').style.display = 'inline'; // Mostrar el enlace "Mostrar Todas"
+                    }
+                });
+            });
+        })
+        .catch(error => console.log('Error:', error));
+}
 
-                cuerpo.innerHTML += `
-                    <div class="tarjetas">
-                        <div>
-                            <img src="${receta.img}" alt="">
+function mostrarRecetas(recetas) {
+    const cuerpo = document.querySelector('#mainContainer');
+    cuerpo.innerHTML = '';
+
+    recetas.forEach(receta => {
+        cuerpo.innerHTML += `
+            <div class="tarjetas">
+                <div>
+                    <img src="${receta.img}" alt="">
+                </div>
+                <div class="info">
+                    <h2>${receta.nombre}</h2>
+                    <div class="infoComesales">
+                        <div class="descripcionTarjetas">
+                            <p class="descripcionLimit">${receta.descripcion || ' '}</p>
                         </div>
-                        <div class="info">
-                        <h2>${receta.nombre}</h2>
-                            <div class="infoComesales">
-                                <div class="descripcionTarjetas">
-                                    <p class="descripcionLimit">${receta.descripcion !== null ? receta.descripcion : ' '}</p>
-                                </div>
-                                <div class="comensales">
-                                    <span>${receta.comensales}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <center><button data-id="${receta.id}" class="modalContent">MAS INFORMACION</button></center>
+                        <div class="comensales">
+                            <span>${receta.comensales}</span>
                         </div>
                     </div>
-                `
+                </div>
+                <div>
+                    <center><button data-id="${receta.id}" class="modalContent">MAS INFORMACION</button></center>
+                </div>
+            </div>
+        `;
+    });
 
-                
-            });
-            const botonesPelis = document.querySelectorAll('.modalContent')
+    const botonesPelis = document.querySelectorAll('.modalContent');
+    botonesPelis.forEach(botonPeli => {
+        botonPeli.addEventListener('click', mostrarModal);
+    });
+}
 
-            botonesPelis.forEach(botonPeli => {
-                botonPeli.addEventListener('click', mostrarModal)
-            })
-        })
-        .catch(error => console.log('Error:', error))
+function filtrarRecetasPorTipo(tipoSeleccionado) {
+    const recetasFiltradas = listaRecetas.filter(receta => receta.id_tipo == tipoSeleccionado);
+    mostrarRecetas(recetasFiltradas);
 }
 
 getTipos()

@@ -1,24 +1,28 @@
 <?php
-
+// Importar las clases necesarias
 require_once '../data/tipo.php';
 require_once 'utilidades.php';
 
+// Establecer el tipo de contenido como JSON
 header('Content-Type: application/json');
 
+// Crear instancia de la clase Tipo
 $tipo = new Tipo();
- 
-//obtener el método de la petición (GET, POST, PUT, DELETE)
+
+// Obtener el método de la petición HTTP
+// Obtener el método de la petición (GET, POST, PUT, DELETE)
   $method = $_SERVER['REQUEST_METHOD'];
 
   // Obtener la URI de la petición
   $uri = $_SERVER['REQUEST_URI'];
 
-  //obtener los parámetros de la petición
+  // Obtener los parámetros de la URI
   $parametros = Utilidades::parseUriParameters($uri);
 
-  //obtener el parámetro id
+  // Obtener el ID si existe
   $id = Utilidades::getParameterValue($parametros, 'id');
   
+  // Manejar las diferentes peticiones HTTP
   switch($method){
     case 'GET':
         if($id){
@@ -52,14 +56,28 @@ $tipo = new Tipo();
         echo json_encode(['error' => 'Método no permitido']);
   }
 
+  /**
+   * Obtiene un tipo por su ID
+   * @param object $tipo Instancia de la clase Tipo
+   * @param int $id ID del tipo
+   * @return array Datos del tipo
+   */
   function getTipoById($tipo, $id){
     return $tipo->getById($id);
   }
 
+  /**
+   * Crea un nuevo tipo
+   * @param object $tipo Instancia de la clase Tipo
+   */
   function getAllTipos($tipo){
     return $tipo->getAll();
   }
 
+  /**
+   * Crea un nuevo tipo
+   * @param object $tipo Instancia de la clase Tipo
+   */
   function setTipo($tipo){
     $data = json_decode(file_get_contents('php://input'), true);
 
@@ -71,6 +89,11 @@ $tipo = new Tipo();
     }
   }
 
+  /**
+   * Actualiza un tipo existente
+   * @param object $tipo Instancia de la clase Tipo
+   * @param int $id ID del tipo a actualizar
+   */
   function updateTipo($tipo, $id){
     $data = json_decode(file_get_contents('php://input'), true);
 
@@ -83,6 +106,11 @@ $tipo = new Tipo();
  
   }
 
+  /**
+   * Elimina un tipo
+   * @param object $tipo Instancia de la clase Tipo
+   * @param int $id ID del tipo a eliminar
+   */
   function deleteTipo($tipo, $id){
     $affected = $tipo->delete($id);
     echo json_encode(['affected' => $affected]);

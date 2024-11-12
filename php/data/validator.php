@@ -1,6 +1,15 @@
 <?php
-
+/**
+ * Clase Validator
+ * Proporciona funcionalidades de validación y saneamiento de datos
+ * para el sistema de gestión de recetas
+ */
 class Validator{
+    /**
+     * Sanea un array de datos eliminando HTML, espacios extras y caracteres especiales
+     * @param array $datos Array de datos a sanear
+     * @return array Array con los datos saneados
+     */
     public static function sanear($datos){
         $saneados = [];
         foreach($datos as $key => $value){
@@ -10,6 +19,11 @@ class Validator{
     }
 
 // VALIDAR RECETA
+    /**
+     * Valida los datos de una receta según las reglas de negocio establecidas
+     * @param array $data Array con los datos de la receta a validar
+     * @return array Array con los errores encontrados (vacío si no hay errores)
+     */
     public static function validarReceta($data){
         $errors = [];
 
@@ -32,12 +46,12 @@ class Validator{
             $errors['comensales'] = "Demasiados comensales";
         }
 
-        //validar preparación
+        //validar tiempo de preparación
         if(isset($data['preparacion']) && strlen($data['preparacion']) > 12){
             $errors['preparacion'] = "Recalcula el tiempo";
         }
 
-        //validar cocinar
+        //validar tiempo de cocinar
         if(isset($data['cocinar']) && strlen($data['cocinar']) > 12){
             $errors['cocinar'] = "Recalcula el tiempo";
         }

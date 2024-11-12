@@ -1,28 +1,32 @@
 <?php
 
+/**
+ * Clase Utilidades
+ * Proporciona métodos estáticos para el manejo de parámetros de URL y otras utilidades
+ */
 class Utilidades{
 
     /**
-     * Recibe una url y devuelve un array asociativo con los parámetros que haya en la url
-     * Si no hay parámetros devuelve un array vacío
+     * Parsea los parámetros de una URI y los devuelve como array asociativo
+     * @param string $uri La URI a parsear
+     * @return array Array asociativo con los parámetros encontrados
      */
     public static function parseUriParameters($uri) {
-        
-        // Separar la ruta de los parámetros
+        // Separar la ruta de los parámetros usando el carácter '?'
         $parts = explode('?', $uri);
         
-        // Si no hay parámetros, devolver un array vacío
+        // Si no hay parámetros (no hay '?'), devolver array vacío
         if (count($parts) == 1) {
             return [];
         }
         
-        // Obtener la cadena de parámetros
+        // Obtener la cadena de parámetros (todo lo que va después del '?')
         $paramString = $parts[1];
         
-        // Dividir los parámetros
+        // Dividir los parámetros por el carácter '&'
         $paramPairs = explode('&', $paramString);
         
-        // Array para almacenar los parámetros
+        // Array para almacenar los pares clave-valor de los parámetros
         $params = [];
         
         // Procesar cada par de parámetros
@@ -38,14 +42,13 @@ class Utilidades{
         return $params;
     }
 
+    /**
+     * Obtiene el valor de un parámetro específico del array de parámetros
+     * @param array $params Array de parámetros
+     * @param string $paramName Nombre del parámetro a buscar
+     * @return mixed|null Valor del parámetro o null si no existe
+     */
     public static function getParameterValue(array $params, string $paramName) {
-
-        // if(isset($params[$paramName])){
-        //     return $params[$paramName];
-        // }else{
-        //     return null;
-        // }
-
         return $params[$paramName] ?? null;
     }
 }

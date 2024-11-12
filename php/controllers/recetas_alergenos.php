@@ -1,24 +1,28 @@
 <?php
-
+// Importar las clases necesarias
 require_once '../data/receta_alergeno.php';
 require_once 'utilidades.php';
 
+// Establecer el tipo de contenido como JSON
 header('Content-Type: application/json');
 
+// Crear instancia de la clase recetaAlergenos
 $recetaAlergenos = new recetaAlergenos();
- 
-//obtener el método de la petición (GET, POST, PUT, DELETE)
+
+// Obtener el método de la petición HTTP
+// Obtener el método de la petición (GET, POST, PUT, DELETE)
   $method = $_SERVER['REQUEST_METHOD'];
 
   // Obtener la URI de la petición
   $uri = $_SERVER['REQUEST_URI'];
 
-  //obtener los parámetros de la petición
+  // Obtener los parámetros de la URI
   $parametros = Utilidades::parseUriParameters($uri);
 
-  //obtener el parámetro id
+  // Obtener el ID si existe
   $id = Utilidades::getParameterValue($parametros, 'id');
   
+  // Manejar las diferentes peticiones HTTP
   switch($method){
     case 'GET':
         if($id){
@@ -52,14 +56,29 @@ $recetaAlergenos = new recetaAlergenos();
         echo json_encode(['error' => 'Método no permitido']);
   }
 
+  /**
+   * Obtiene una relación receta-alérgeno por su ID
+   * @param object $recetaAlergenos Instancia de la clase recetaAlergenos
+   * @param int $id ID de la relación
+   * @return array Datos de la relación
+   */
   function getRecetaAlergenoById($recetaAlergenos, $id){
     return $recetaAlergenos->getById($id);
   }
 
+  /**
+   * Obtiene todas las relaciones receta-alérgeno
+   * @param object $recetaAlergenos Instancia de la clase recetaAlergenos
+   * @return array Lista de relaciones
+   */
   function getAllRecetaAlergenos($recetaAlergenos){
     return $recetaAlergenos->getAll();
   }
 
+  /**
+   * Crea una nueva relación receta-alérgeno
+   * @param object $recetaAlergenos Instancia de la clase recetaAlergenos
+   */
   function setRecetaAlergeno($recetaAlergenos){
     $data = json_decode(file_get_contents('php://input'), true);
 
@@ -71,6 +90,11 @@ $recetaAlergenos = new recetaAlergenos();
     }
   }
 
+  /**
+   * Actualiza una relación receta-alérgeno existente
+   * @param object $recetaAlergenos Instancia de la clase recetaAlergenos
+   * @param int $id ID de la relación a actualizar
+   */
   function updateRecetaAlergeno($recetaAlergenos, $id){
     $data = json_decode(file_get_contents('php://input'), true);
 
@@ -83,6 +107,11 @@ $recetaAlergenos = new recetaAlergenos();
  
   }
 
+  /**
+   * Elimina una relación receta-alérgeno
+   * @param object $recetaAlergenos Instancia de la clase recetaAlergenos
+   * @param int $id ID de la relación a eliminar
+   */
   function deleteRecetaAlergeno($recetaAlergenos, $id){
     $affected = $recetaAlergenos->delete($id);
     echo json_encode(['affected' => $affected]);

@@ -4,9 +4,10 @@
     box-sizing: border-box;
 }
 
-/* .logo{
-    
-} */
+.logoImg{
+    height: 150px;
+    object-fit: contain;
+} 
 
 main{
     width: 80%;
@@ -16,14 +17,14 @@ main{
 }
 
 nav{
-    padding: 16px;
+    padding-left: 32px;
+    padding-right: 32px;
     margin-top: 16px;
     margin-bottom: 16px;
     background-color: rgb(27, 27, 27);
-    text-align: center;
 }
 
-a{
+.nav{
     padding: 8px;
     padding-top: 16px;
     padding-bottom: 16px;
@@ -31,9 +32,28 @@ a{
     text-decoration: none;
 }
 
-a:hover{
+.nav:hover{
     background-color: rgb(255, 145, 0);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
+
+/* RESPONSIVE NAVBAR */
+    .navbar {
+        overflow: hidden;
+    }
+    .navbar a {
+        float: left;
+        display: block;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .navbar .icon {
+        display: none;
+    }
+/* FIN RESPONSIVE NAVBAR */
 
 h1{
     text-align: center;
@@ -46,19 +66,56 @@ h2{
     margin: 20px;
 }
 
+/* FOOTER */
+footer{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 16px;
+    padding: 16px;
+    text-align: center;
+    color: white;
+    background-color: rgb(27, 27, 27);
+}
+
+.footer1 { grid-area: 1 / 1 / 2 / 4; }
+.footer2 { grid-area: 1 / 4 / 2 / 5; }
+.footer3 {
+    margin-top: 8px;
+    grid-area: 2 / 1 / 3 / 5;
+}
+
+.btn-login{
+    color: black;
+    background-color: #888;
+    padding: 16px;
+    text-decoration: none;
+    border-bottom-left-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
+.btn-login:hover{
+    color: white;
+}
+
+a{
+    padding: 16px;
+    text-decoration: none;
+    color: white;
+}
+
+a:hover{
+    background-color: #888;
+    border-bottom-left-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+/* AQUI ACABA EL FOOTER */
+
 .mainContainer{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 24px;
-}
-
-.tarjetas{
-    display: flex;
-    flex-direction: column;
-    width: 30%;
-    border-radius: 0.3rem;
-    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 }
 
 .descripcionLimit{
@@ -156,46 +213,6 @@ button:hover{
         width: 80%;
     }
 
-    .parent {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(7);
-    }
-    
-    .img_modal { grid-area: 1 / 1 / 2 / 4; }
-
-    .info_modal { grid-area: 2 / 1 / 5 / 4; }
-
-    .ingre_modal {
-        grid-area: 5 / 1 / 6 / 2;
-        margin-top: 16px;
-        padding: 16px;
-        background-color: rgb(253, 242, 228);
-        border-radius: 0.3rem;
-
-    }
-
-    .receta_modal {
-        grid-area: 5 / 2 / 6 / 4;
-        margin-top: 16px;
-        padding: 16px;
-    }
-
-    .alerg_modal {
-        grid-area: 6 / 1 / 7 / 4;
-        margin-top: 16px;
-        margin-bottom: 16px;
-    }
-
-    .download_modal { grid-area: 7 / 1 / 8 / 4; }
-
-    .modal_content img{
-        height: 400px;
-        width: 95%;
-        margin-right: 5%;
-        border-radius: 0.3rem;
-    }
-
     hr{
         margin-top: 16px;
         margin-bottom: 16px;
@@ -210,7 +227,6 @@ button:hover{
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: 1fr;
     }
-    
     .datillos1 { grid-area: 1 / 1 / 2 / 2; }
     .datillos2 { grid-area: 1 / 2 / 2 / 3; }
     
@@ -228,3 +244,238 @@ button:hover{
         text-decoration: none;
         cursor: pointer;
     }
+
+/* MEDIA QUERYS */
+    /* NAVBAR RESPONSIVE */
+    @media (min-width: 319px) and (max-width: 1023.98px){
+        .navbar a:not(:first-child) {
+            display: none;
+        }
+        .navbar a.icon {
+            float: right;
+            display: block;
+        }
+        .navbar.responsive {
+            position: relative;
+        }
+        .navbar.responsive .icon{
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+        .navbar.responsive a{
+            float: none;
+            display: block;
+            text-align: left;
+        }
+    }
+    /* FIN NAVBAR RESPONSIVE */
+
+    /*PC*/
+    @media (min-width: 1023.98px){
+        .parent {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(7);
+        }
+        .img_modal { grid-area: 1 / 1 / 2 / 4; }
+        .info_modal { grid-area: 2 / 1 / 5 / 4; }
+        .ingre_modal {
+            grid-area: 5 / 1 / 6 / 2;
+            margin-top: 16px;
+            padding: 16px;
+            background-color: rgb(253, 242, 228);
+            border-radius: 0.3rem;
+    
+        }
+        .receta_modal {
+            grid-area: 5 / 2 / 6 / 4;
+            margin-top: 16px;
+            padding: 16px;
+        }
+        .alerg_modal {
+            grid-area: 6 / 1 / 7 / 4;
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+        .download_modal { grid-area: 7 / 1 / 8 / 4; }
+        .modal_content img{
+            height: 400px;
+            width: 95%;
+            margin-right: 5%;
+            border-radius: 0.3rem;
+        }
+    }
+    @media (min-width: 1023.98px) and (max-width: 1339.98px){
+        .tarjetas{
+            display: flex;
+            flex-direction: column;
+            width: 30%;
+            border-radius: 0.3rem;
+            box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+        }
+        
+        .descripcionTarjetas{
+            width: 60%;
+            padding-right: 16px;
+        }
+        
+        .comensales{
+            width: 40%;
+            text-align: right;
+        }
+    }
+    @media (min-width: 1339.98px){
+        .tarjetas{
+            display: flex;
+            flex-direction: column;
+            width: 30%;
+            border-radius: 0.3rem;
+            box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+        }
+        
+        .descripcionTarjetas{
+            width: 70%;
+            padding-right: 16px;
+        }
+        
+        .comensales{
+            width: 30%;
+            text-align: right;
+        }
+    }
+    /*Fin Escritorio*/
+
+    /*TABLET*/
+    /*Portrait*/
+    @media (min-width: 576px) and (max-width: 1023.98px) and (orientation: portrait){
+        .descripcionTarjetas{
+            width: 65%;
+            padding-right: 16px;
+        }
+        
+        .comensales{
+            width: 35%;
+            text-align: right;
+        }
+        .modal_content img{
+            height: 400px;
+            width: 100%;
+            border-radius: 0.3rem;
+        }
+    }
+
+    @media (min-width: 576px) and (max-width: 1023.98px){
+        .tarjetas{
+            display: flex;
+            flex-direction: column;
+            width: 48%;
+            border-radius: 0.3rem;
+            box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+        }
+        .ingre_modal {
+            grid-area: 5 / 1 / 6 / 2;
+            margin-top: 16px;
+            margin-bottom: 16px;
+            padding: 16px;
+            background-color: rgb(253, 242, 228);
+            border-radius: 0.3rem;
+    
+        }
+        .alerg_modal {
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+        .modal_content img{
+            height: 400px;
+            width: 100%;
+            border-radius: 0.3rem;
+        }
+    }
+    /*fin tablet*/
+
+    /*MOVIL*/
+    /*Portrait*/
+    @media (max-width: 749px)and (orientation:portrait) {
+        .tarjetas{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            border-radius: 0.3rem;
+            box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .descripcionTarjetas{
+            width: 70%;
+            padding-right: 16px;
+        }
+        
+        .comensales{
+            width: 30%;
+            text-align: right;
+        }
+
+        .mainDatos {
+            display: flex;
+            flex-direction: column;
+        }
+        .ingre_modal {
+            grid-area: 5 / 1 / 6 / 2;
+            margin-top: 16px;
+            margin-bottom: 16px;
+            padding: 16px;
+            background-color: rgb(253, 242, 228);
+            border-radius: 0.3rem;
+    
+        }
+        .alerg_modal {
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+        .modal_content img{
+            height: 400px;
+            width: 100%;
+            border-radius: 0.3rem;
+        }
+    }
+    /*landscape*/
+    @media (min-width: 576px) and (max-width: 991.98px) and (orientation:landscape) {
+        .tarjetas{
+            display: flex;
+            flex-direction: column;
+            width: 45%;
+            border-radius: 0.3rem;
+            box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .descripcionTarjetas{
+            width: 65%;
+            padding-right: 16px;
+        }
+        
+        .comensales{
+            width: 35%;
+            text-align: right;
+        }
+
+        .ingre_modal {
+            grid-area: 5 / 1 / 6 / 2;
+            margin-top: 16px;
+            margin-bottom: 16px;
+            padding: 16px;
+            background-color: rgb(253, 242, 228);
+            border-radius: 0.3rem;
+    
+        }
+        .alerg_modal {
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+
+        .modal_content img{
+            height: 400px;
+            width: 100%;
+            border-radius: 0.3rem;
+        }
+    }
+    /*fin movil*/

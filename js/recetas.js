@@ -1,9 +1,11 @@
+// URLs de las APIs
 const API_URL_RECETAS = 'http://localhost/PHP/PHP_PROYECTO/php/controllers/recetas.php';
 const API_URL_TIPOS = 'http://localhost/PHP/PHP_PROYECTO/php/controllers/tipos.php';
 const API_URL_ALERGENOS = 'http://localhost/PHP/PHP_PROYECTO/php/controllers/alergenos.php';
 const API_URL_RECETA_ALERGENOS = 'http://localhost/PHP/PHP_PROYECTO/php/controllers/recetas_alergenos.php';
 const errorElement = document.getElementById('createError');
 
+// Arrays para almacenar datos
 let listaTipos = []
 let listaAlergenos = []
 let listaRecetaAlergenos = []
@@ -28,9 +30,17 @@ function limpiarHTML(str){
     });
 }
 
+/**
+ * Valida los campos del formulario
+ * @param {string} nombre - Nombre de la receta
+ * @param {string} descripcion - Descripción de la receta
+ * ... (resto de parámetros)
+ * @returns {Array} Array con mensajes de error
+ */
 function validaciones(nombre, descripcion, comensales, preparacion, cocinar, temperatura, ingredientes, pasos){
     let errores = [];
 
+    // Validaciones de longitud para cada campo
     if(nombre.length <= 2 || nombre.length >= 50){
         errores.push('El nombre debe tener entre 2 y 50 caracteres.');
     }
@@ -129,6 +139,8 @@ function getRecetaAlergenos() {
             // Aquí puedes seleccionar los checkboxes de alérgenos previamente seleccionados
             const idsAlergenosReceta = listaRecetaAlergenos.map(relacion => relacion.id_alergenos);
 
+            console.log(idsAlergenosReceta)
+
             // Marca los checkboxes correspondientes
             idsAlergenosReceta.forEach(id => {
                 const checkbox = document.querySelector(`input[type="checkbox"][value="${id}"]`);
@@ -170,7 +182,7 @@ function getRecetas(){
                 const sanitizedComensales = limpiarHTML(receta.comensales)
                 const sanitizedPreparacion = limpiarHTML(receta.preparacion)
                 const sanitizedCocinar = limpiarHTML(receta.cocinar)
-            // PARA EVITAR CAMPOR NULOS Y QUE SE MUESTREN TODAS LAS RECETAS UTILIZAR EL SIGUIENTE CODIGO
+                // PARA EVITAR CAMPOR NULOS Y QUE SE MUESTREN TODAS LAS RECETAS UTILIZAR EL SIGUIENTE CODIGO
                 const sanitizedTemperatura = (receta.temperatura == null)? ' ' : limpiarHTML(receta.temperatura)
                 const sanitizedIngredientes = limpiarHTML(receta.ingredientes)
                 const sanitizedPasos = limpiarHTML(receta.pasos)

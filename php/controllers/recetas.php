@@ -1,24 +1,32 @@
 <?php
+// Iniciar sesión para manejar variables de sesión
+session_start();
 
+// Importar las clases y configuraciones necesarias
+include_once '../data/config.php';
 require_once '../data/receta.php';
 require_once 'utilidades.php';
 
+// Establecer el tipo de contenido como JSON
 header('Content-Type: application/json');
 
+// Crear instancia de la clase Receta
 $receta = new Receta();
- 
-//obtener el método de la petición (GET, POST, PUT, DELETE)
+
+// Obtener el método de la petición HTTP
+// Obtener el método de la petición (GET, POST, PUT, DELETE)
   $method = $_SERVER['REQUEST_METHOD'];
 
   // Obtener la URI de la petición
   $uri = $_SERVER['REQUEST_URI'];
 
-  //obtener los parámetros de la petición
+  // Obtener los parámetros de la URI
   $parametros = Utilidades::parseUriParameters($uri);
 
-  //obtener el parámetro id
+  // Obtener el ID si existe
   $id = Utilidades::getParameterValue($parametros, 'id');
   
+  // Manejar las diferentes peticiones HTTP
   switch($method){
     case 'GET':
         if($id){
@@ -52,14 +60,29 @@ $receta = new Receta();
         echo json_encode(['error' => 'Método no permitido']);
   }
 
+  /**
+   * Obtiene una receta por su ID
+   * @param object $receta Instancia de la clase Receta
+   * @param int $id ID de la receta
+   * @return array Datos de la receta
+   */
   function getRecetaById($receta, $id){
     return $receta->getById($id);
   }
 
+  /**
+   * Obtiene todas las recetas
+   * @param object $receta Instancia de la clase Receta
+   * @return array Lista de recetas
+   */
   function getAllRecetas($receta){
     return $receta->getAll();
   }
 
+  /**
+   * Crea una nueva receta
+   * @param object $receta Instancia de la clase Receta
+   */
   function setReceta($receta){
     $data = json_decode(file_get_contents('php://input'), true);
 
@@ -82,6 +105,11 @@ $receta = new Receta();
     }
   }
 
+  /**
+   * Actualiza una receta existente
+   * @param object $receta Instancia de la clase Receta
+   * @param int $id ID de la receta a actualizar
+   */
   function updateReceta($receta, $id){
     $data = json_decode(file_get_contents('php://input'), true);
 
@@ -105,7 +133,67 @@ $receta = new Receta();
  
   }
 
+  /**
+   * Elimina una receta
+   * @param object $receta Instancia de la clase Receta
+   * @param int $id ID de la receta a eliminar
+   */
   function deleteReceta($receta, $id){
     $affected = $receta->delete($id);
     echo json_encode(['affected' => $affected]);
+}
+
+
+
+// LOGIN
+$usuarioBd = new UsuarioBD();
+
+/**
+ * Redirige a una URL con un mensaje
+ * @param string $url URL de destino
+ * @param string $success Indicador de éxito
+ * @param string $mensaje Mensaje a mostrar
+ */
+function redirigirConMensaje($url, $success, $mensaje){
+    // Almacenar el resultado en la sesión
+    $_SESSION['success'] = $success;
+    $_SESSION['message'] = $mensaje;
+
+    // Realizar la redirección
+    header("Location: $url");
+    exit();
+}
+
+// REGISTRO USUARIO
+if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['registro'])){
+    $nombre = $_POST['nombre'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $resultado = $usuarioBd->registrarUsuario($nombre, $email, $password);
+
+    redirigirConMensaje('../../login.php', $resultado['success'], $resultado['message']);
+}
+
+// INICIO DE SESION
+if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['login'])){
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $resultado = $usuarioBd->inicioSesion($email, $password);
+
+    if($resultado['success'] == "success"){
+        $_SESSION['user_id'] = $resultado['id'];
+    }
+
+    redirigirConMensaje('../../adminRecetas.php', $resultado['success'], $resultado['message']);
+}
+
+// RECUPERACION DE CONTRASEÑA
+if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['recuperar'])){
+    $email = $_POST['email'];
+
+    $resultado = $usuarioBd->recuperarPassword($email);
+
+    redirigirConMensaje('../../login.php', $resultado['success'], $resultado['message']);
 }
